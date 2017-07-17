@@ -1,0 +1,896 @@
+---
+title: "Exploratory Data analysis"
+author: "Nishanth Gandhidoss"
+date: "2 October 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r}
+# function to Install packages
+installNewPackage <- function(packageName) {
+        if(packageName  %in% rownames(installed.packages()) == FALSE) 
+        {
+                install.packages(packageName, repos = "http://cran.us.r-project.org", dependencies=TRUE)
+        }
+}
+```
+
+## Exploratory Data Analysis Assignment
+
+**Due: Oct. 7, 2016**
+
+For this assignment you will be exploring two sets of data. For the first focus on NFL sports data, you will be completing the assignment alone (each student by themselves). For the second part, focusing on the Spotify data, you may work in the groups (the same groups as the Case Study).
+
+**NFL Data**
+
+The use of data analysis in sports is becoming increasing more common (and a high profit business). Interest in this analysis grew substantially with the publishing of the book Moneyball (and the subsequent movie). Statistical analysis has spread to many other sports including basketball, football (both American and soccer), tennis, and many others.
+
+Consider the following three data sets provided:
+
+- nfl-passing-2012.csv,
+- nfl-passing-2013.csv,
+- nfl-passing-2014.csv, and
+- nfl-passing-2015.csv
+
+The four data sets consist of passing statistics of NFL quarterbacks for the last four seasons. The data was sourced from: http://www.pro-football-reference.com/years/2015/passing.htm
+
+**Importing the data**
+
+The datasets are imported using read.csv() method to compute the required values.
+
+```{r}
+nflPassing2012 <- read.csv("nfl-passing-2012.csv", header = TRUE)
+nflPassing2013 <- read.csv("nfl-passing-2013.csv", header = TRUE)
+nflPassing2014 <- read.csv("nfl-passing-2014.csv", header = TRUE)
+nflPassing2015 <- read.csv("nfl-passing-2015.csv", header = TRUE)
+```
+
+
+**Q1. 2015 Data**
+
+First, examine a single data source from the 2015 season.
+
+The following data analysis should be run on only a selection of players that have made at least 100 attempts and 1000 yards.
+
+Report the following information as values, tables, and/or figures.
+
+1. Calculate the mean, median, and mode of touchdowns and interceptions.
+
+```{r}
+meanMedianMode <- function(colvalues)
+{
+        print(paste("Mean is", mean(colvalues), sep = " "))
+        print(paste("Median is", median(colvalues), sep = " "))
+        getMode <- function(value) {
+                           uniqv <- unique(value)
+                           uniqv[which.max(tabulate(match(value, uniqv)))]
+                        }
+        print(paste("Mode is", getMode(colvalues), sep = " "))
+}
+
+meanMedianMode(nflPassing2015$TD)
+meanMedianMode(nflPassing2015$Int)
+```
+
+
+2. Calculate the first and third quartiles, Q1 and Q3 of Yds and Rate
+
+```{r}
+firstThirdQuartiles <- function(colValues)
+{
+        print(paste("First Quartile is", quantile(colValues, 0.25), sep = " "))
+        print(paste("Third Quartile is", quantile(colValues, 0.75), sep = " "))
+}
+
+firstThirdQuartiles(nflPassing2015$Yds)
+firstThirdQuartiles(nflPassing2015$Rate)
+```
+
+
+3. Present the five-number summary of Cmp\% and Yds as a table
+
+```{r}
+newNflPassing2015 <- nflPassing2015
+colnames(newNflPassing2015) [10] <- "Cmppercent"
+summary(newNflPassing2015$Cmppercent)
+summary(newNflPassing2015$Yds)
+```
+
+
+4. Create a histogram of yards with 8, 16, and 24 bins.
+
+```{r}
+histogramBins <- function(colValues, binSize)
+{
+        hist(colValues, breaks = seq(min(colValues),max(colValues),l=binSize+1),
+             main = paste("Histogram | Bin size", binSize, sep = " "),
+             xlab = "Yards", col = "red")
+}
+histogramBins(newNflPassing2015$Yds, 8)
+histogramBins(newNflPassing2015$Yds, 16)
+histogramBins(newNflPassing2015$Yds, 24)
+```
+
+
+5. Compare the distrubtion of yards based on whether they threw less than 12 interceptions.
+
+```{r}
+plot(nflPassing2015$Int, nflPassing2015$Yds)
+abline(v=12, col = "black")
+text(5, 3000, labels = "> 12", col = "green", cex = 2)
+text(15, 3000, labels = "< 12", col = "red", cex = 2)
+```
+
+
+6. Create a scatterplot of touchdowns vs. interceptions.
+
+```{r}
+plot(nflPassing2015$TD, nflPassing2015$Int, col = "blue", pch = 16,
+     xlab = "Touch down", ylab = "Interception")
+```
+
+
+**Q2. 2014 Data**
+
+Repeat the analysis above with the data from the 2014 season.
+
+1. Calculate the mean, median, and mode of touchdowns and interceptions.
+
+```{r}
+meanMedianMode <- function(colvalues)
+{
+        print(paste("Mean is", mean(colvalues), sep = " "))
+        print(paste("Median is", median(colvalues), sep = " "))
+        getMode <- function(value) {
+                           uniqv <- unique(value)
+                           uniqv[which.max(tabulate(match(value, uniqv)))]
+                        }
+        print(paste("Mode is", getMode(colvalues), sep = " "))
+}
+
+meanMedianMode(nflPassing2014$TD)
+meanMedianMode(nflPassing2014$Int)
+```
+
+
+2. Calculate the first and third quartiles, Q1 and Q3 of Yds and Rate
+
+```{r}
+firstThirdQuartiles <- function(colValues)
+{
+        print(paste("First Quartile is", quantile(colValues, 0.25), sep = " "))
+        print(paste("Third Quartile is", quantile(colValues, 0.75), sep = " "))
+}
+
+firstThirdQuartiles(nflPassing2014$Yds)
+firstThirdQuartiles(nflPassing2014$Rate)
+```
+
+
+3. Present the five-number summary of Cmp\% and Yds as a table
+
+```{r}
+newNflPassing2014 <- nflPassing2014
+colnames(newNflPassing2014) [10] <- "Cmppercent"
+summary(newNflPassing2014$Cmppercent)
+summary(newNflPassing2014$Yds)
+```
+
+
+4. Create a histogram of yards with 8, 16, and 24 bins.
+
+```{r}
+histogramBins <- function(colValues, binSize)
+{
+        hist(colValues, breaks = seq(min(colValues),max(colValues),l=binSize+1), 
+             main = paste("Histogram | Bin size", binSize, sep = " "),
+             xlab = "Yards", col = "red")
+}
+histogramBins(newNflPassing2014$Yds, 8)
+histogramBins(newNflPassing2014$Yds, 16)
+histogramBins(newNflPassing2014$Yds, 24)
+```
+
+
+5. Compare the distrubtion of yards based on whether they threw less than 12 interceptions.
+
+```{r}
+plot(nflPassing2015$Int, nflPassing2015$Yds)
+abline(v=12, col = "black")
+text(5, 3000, labels = "> 12", col = "green", cex = 2)
+text(15, 3000, labels = "< 12", col = "red", cex = 2)
+```
+
+
+6. Create a scatterplot of touchdowns vs. interceptions.
+
+```{r}
+plot(nflPassing2015$TD, nflPassing2015$Int, col = "blue", pch = 16,
+     xlab = "Touch down", ylab = "Interception")
+```
+
+
+**Q3. All Seasons**
+
+For this part of the assignment, you should look at variables across all four seasons. The merge should match players across seasons (using a key of player names). Ensure that the variables that may be named the same in the four data files all appear in the final data for analysis.
+
+
+```{r}
+# create duplicate of the datasets
+nflPassingDup2012 <- data.frame(nflPassing2012)
+nflPassingDup2013 <- data.frame(nflPassing2013)
+nflPassingDup2014 <- data.frame(nflPassing2014)
+nflPassingDup2015 <- data.frame(nflPassing2015)
+
+# cleaning the Name column of the dataset  
+nflPassingDup2012$X <- sub("\\*.*$", "", nflPassingDup2012$X)
+nflPassingDup2013$X <- sub("\\*.*$", "", nflPassingDup2013$X)
+firstHalf <- merge(nflPassingDup2012, nflPassingDup2012, "X", all=TRUE)
+nflPassingDup2014$X <- sub("\\*.*$", "", nflPassingDup2014$X)
+nflPassingDup2015$X <- gsub("\\*.*$", "", nflPassingDup2015$X)
+nflPassingDup2015$X <- gsub("\\\\.*$", "", nflPassingDup2015$X)
+
+# Merge the dataset
+secondHalf <- merge(nflPassingDup2014, nflPassingDup2015, "X", all=TRUE)
+nflCleanedData <- merge(firstHalf, secondHalf, "X", all = TRUE)
+```
+
+
+Select a set of players that has played in at least 5 games in each season and has made at least 100 attempts in each season.
+
+```{r}
+# Subset for the condition
+nflSubsetData <- subset(nflCleanedData, G.x.x>5 & G.x.y>5 & G.y.y>5 & G.y.x>5 & 
+                               Att.x.x>100 & Att.x.y>100 & Att.y.x>100 & Att.y.y>100)
+```
+
+
+Report the following information as values, tables, and/or figures.
+
+1. Calculate the mean, median, and mode of average touchdowns across the four seasons.
+
+```{r}
+nflSubsetData$avgtouchdowns <- (nflSubsetData$TD.x.x + nflSubsetData$TD.x.y + 
+                                        nflSubsetData$TD.y.x + nflSubsetData$TD.y.y)/4
+meanMedianMode(nflSubsetData$avgtouchdowns)
+```
+
+
+2. Create a scatterplot of average touchdowns vs. average completion percentage.
+
+```{r}
+nflSubsetData$avgcmppercent <- (nflSubsetData$Cmp..x.x + nflSubsetData$Cmp..x.y +
+                                      nflSubsetData$Cmp..y.x + nflSubsetData$Cmp..y.y)/4
+plot(nflSubsetData$avgtouchdowns, nflSubsetData$avgcmppercent, 
+     main="Avg. touchdowns vs. Avg. completion percentage",
+     pch = 15, col = "orange",
+     xlab = "Touchdown", ylab = "Completion %")
+```
+
+
+3. Repeat the scatterplot of touchdowns vs. completion percentage using color to indicate which season.
+
+```{r}
+plot(nflSubsetData$TD.x.x, nflSubsetData$Cmp..x.x, pch=17, col=11, 
+     xlab = "Completion %", ylab = "Touchdowns")
+points(nflSubsetData$TD.x.y, nflSubsetData$Cmp..x.y, pch=17, col=12)
+points(nflSubsetData$TD.y.x, nflSubsetData$Cmp..y.x, pch=17, col=13)
+points(nflSubsetData$TD.y.y, nflSubsetData$Cmp..y.y, pch=17, col=14)
+```
+
+
+4. Draw a histogram of yards using color to indicate which season.
+
+```{r}
+nflYards <- as.data.frame(cbind(nflSubsetData$Yds.x.x, nflSubsetData$Yds.x.y, 
+                               nflSubsetData$Yds.y.x, nflSubsetData$Yds.y.y))
+colnames(nflYards) <- c("Season12", "Season13", "Season14", "Season15")
+rownames(nflYards) <- nflSubsetData$X
+
+installNewPackage("ggplot2")
+installNewPackage("reshape")
+library("ggplot2", lib.loc="~/R/win-library/3.3")
+library("reshape", lib.loc="~/R/win-library/3.3")
+
+ggplot(melt(list(Yards_2012 = nflYards$Season12, Yards_2013 = nflYards$Season13,
+                    Yards_2014 = nflYards$Season14, Yards_2015 = nflYards$Season15)),
+       aes(x=value, fill = L1)) + 
+        geom_histogram(position="stack", binwidth = 1000) + 
+        labs(title = "Yards respects to Seasons ") + xlab("Yards")
+```
+
+
+5. Select the 3 quarterbacks with the highest average quarterback rating. Plot the number of touchdowns and completion percentage vs. the season (as the x-axis values).
+
+```{r}
+nflSubsetData$avgrate <- (nflSubsetData$Rate.x.x + nflSubsetData$Rate.x.y +
+                                      nflSubsetData$Rate.y.x + nflSubsetData$Rate.y.y)/4
+sorteddata <- nflSubsetData[order(nflSubsetData$avgrate, decreasing = TRUE),]
+top3Quaters <- sorteddata[1:3,]
+
+plot(c(top3Quaters[1,]$TD.x.x, top3Quaters[1,]$TD.y.x, 
+               top3Quaters[1,]$TD.x.y, top3Quaters[1,]$TD.y.y),
+             c(top3Quaters[1,]$Cmp..x.x, top3Quaters[1,]$Cmp..y.x, 
+               top3Quaters[1,]$Cmp..x.y, top3Quaters[1,]$Cmp..y.y),
+             main = "Touchdowns and Completion Percentage for Rank #1", pch=15,
+                xlab = "Touchdown", ylab = "Completion %")
+axis(3,17,labels = "2013")
+axis(1,31,labels = "2015")
+axis(3,38,labels = "2014")
+axis(3,39,labels = "2012")
+
+plot(c(top3Quaters[2,]$TD.x.x, top3Quaters[2,]$TD.y.x, 
+               top3Quaters[2,]$TD.x.y, top3Quaters[2,]$TD.y.y),
+             c(top3Quaters[2,]$Cmp..x.x, top3Quaters[2,]$Cmp..y.x, 
+               top3Quaters[2,]$Cmp..x.y, top3Quaters[2,]$Cmp..y.y),
+             main = "Touchdowns and Completion Percentage for Rank #2", pch=15,
+                xlab = "Touchdown", ylab = "Completion %")
+axis(3,32,labels = "2015")
+axis(3,33,labels = "2014")
+axis(3,39,labels = "2013")
+axis(3,43,labels = "2012")
+
+plot(c(top3Quaters[3,]$TD.x.x, top3Quaters[3,]$TD.y.x, 
+               top3Quaters[3,]$TD.x.y, top3Quaters[3,]$TD.y.y),
+             c(top3Quaters[3,]$Cmp..x.x, top3Quaters[3,]$Cmp..y.x, 
+               top3Quaters[3,]$Cmp..x.y, top3Quaters[3,]$Cmp..y.y),
+             main = "Touchdowns and Completion Percentage for Rank #3", pch=15,
+                xlab = "Touchdown", ylab = "Completion %")
+axis(1,26,labels = "2012")
+axis(3,26,labels = "2013")
+axis(3,20,labels = "2014")
+axis(3,34,labels = "2015")
+```
+
+
+6. Show four tables with the top 5 QBs each season selected by ESPN's quarterback rating and the following variables: yards, touchdowns, interceptions, completion percentage.
+
+```{r}
+top5QBs <- function(quaterbacks, yards, touchdown, interceptions, completion) {
+        espnQBRating = data.frame(quaterbacks, yards, touchdown, interceptions, completion)
+        sortedEspnQBRating <- espnQBRating[order(espnQBRating$quaterbacks, decreasing = TRUE),]
+        sortedEspnQBRating[1:5,]
+}
+top5QBs(nflSubsetData$QBR.â...x, nflSubsetData$Yds.x.x, nflSubsetData$TD.x.x,
+                          nflSubsetData$Int.x.x, nflSubsetData$Cmp.x.x)
+top5QBs(nflSubsetData$QBR.x, nflSubsetData$Yds.x.y, nflSubsetData$TD.x.y,
+                          nflSubsetData$Int.x.y, nflSubsetData$Cmp.x.y)
+top5QBs(nflSubsetData$QBR.â...y, nflSubsetData$Yds.y.x, nflSubsetData$TD.y.x,
+                          nflSubsetData$Int.y.x, nflSubsetData$Cmp.y.x)
+top5QBs(nflSubsetData$QBR.y, nflSubsetData$Yds.y.y, nflSubsetData$TD.y.y,
+                          nflSubsetData$Int.y.y, nflSubsetData$Cmp.y.y)
+```
+
+
+## Spotify Data
+
+For this question, you will want to use the data from Case Study 1.
+
+**Getting the song list**
+
+```{r}
+songsList <- read.csv("song-list.csv")
+```
+
+To start you will show your understanding and exploration of the data and its features.
+
+For every song on the you will have the following features:
+
+- song title (track)
+- artist
+- peak (highest spot on the charts)
+- date entered (when the song first appeared on the charts)
+- successful (criteria to be predicted)
+
+In addition, you will collect the audio features from Spotify:
+
+- danceability
+- energy
+- key
+- loudness
+- mode
+- speechiness
+- acousticness
+- instrumentalness
+- liveness
+- valence
+- tempo
+- duration_ms
+- time_signature
+
+**Getting the audio feautures data from spotify and merge it with the given song list**
+
+
+**Q4. Features**
+
+For each audio feature, make sure you understand what the features are, what are the possible values, etc. Read the Spotify API describing the audio features.
+
+
+```{r}
+# loading the dataset
+songsList <- read.csv("song-list.csv")
+
+# installing packages
+installNewPackage("httr")
+installNewPackage("jsonlite")
+installNewPackage("httpuv")
+# if("spotifyr"  %in% rownames(installed.packages()) == FALSE)
+#         devtools::install_github('rweyant/spotifyr')
+
+# loading the packages
+library("httr")
+library("jsonlite")
+library("httpuv")
+# library("spotifyr")
+
+
+# ============================================================================
+
+
+# Intialization of variables
+clientKey <- '7065b7a80f43444796c73ef454903cdd'
+clientSecret <- '5d65bc39a92349659e3a16634ef1680f'
+userID <- '22uhyoyypkqsrhpmvjfchltva'
+playlistID <- '6bkAwdiDi9lQG0IHISpwh0'
+redirectURL <- 'http://localhost:1410/'
+
+
+# ============================================================================
+
+
+# Token
+response <- POST('https://accounts.spotify.com/api/token',
+                 accept_json(), authenticate(clientKey, clientSecret),
+                 body = list(grant_type = 'client_credentials'),
+                 encode = 'form', verbose())
+
+mytoken <- content(response)$access_token
+HeaderValue <- paste0('Bearer ', mytoken)
+
+# oauth
+spotifyEndpoint <- oauth_endpoint("spotify",
+                                  "https://accounts.spotify.com/authorize",
+                                  "https://accounts.spotify.com/api/token")
+spotifyApp <- oauth_app("spotify", clientKey, clientSecret)
+options(httr_oob_default=FALSE)
+spotifyToken <- oauth2.0_token(spotifyEndpoint, spotifyApp, scope = "playlist-modify-public")
+
+
+# ============================================================================
+
+
+# Get the song SpotifyID based on title and Artist - Start
+# Got 305 songs songs
+songListIDs <- list()
+songListName <- list()
+failedSongListName <- list()
+failedSongListNo <- list()
+fullSongListIDs <- list()
+count <- 0
+for(i in 1:nrow(songsList)) {
+        trackSearchURL <- URLencode(paste("https://api.spotify.com/v1/search/?q=",
+                                          songsList$Title[i],
+                                          "&type=track",
+                                          sep = ""), reserved = FALSE, repeated = FALSE)
+        getSong <- GET(url=trackSearchURL, add_headers(Authorization = HeaderValue))
+        songInfo <- fromJSON(toJSON(content(getSong)))
+        for(j in 1:length(songInfo$tracks$items$artists))  {
+                if(songsList$Artist[i] %in% as.vector(unlist(songInfo$tracks$items$artists[j]))) {
+                        songListName[length(songListName) + 1] <- songInfo$tracks$items$name[j]
+                        songListIDs[length(songListIDs) + 1] <- songInfo$tracks$items$id[j]
+                        fullSongListIDs[length(fullSongListIDs) + 1] <- songInfo$tracks$items$id[j]
+                        break;
+                }
+                else {
+                        failedSongListName[length(failedSongListName) + 1] <- songInfo$tracks$items$name[j]
+                        fullSongListIDs[length(fullSongListIDs) + 1] <- NA
+                        if(!is.null(unlist(songInfo$tracks$items$name[j]))){
+                                failedSongListNo[length(failedSongListNo) + 1] <- i
+                        }
+                        break;
+                }
+        }
+}
+songsFound <- data.frame(unlist(songListName), unlist(songListIDs))
+songsNotFound <- data.frame(unlist(failedSongListNo), unlist(failedSongListName))
+colnames(songsFound) <- c("Name", "ID")
+colnames(songsNotFound) <- c("No", "Name")
+
+# Preparing the csv file for songs found and not found
+write.csv(songsFound, file = "songs-found.csv")
+write.csv(songsNotFound, file = "songs-not-found.csv")
+
+# Get the song SPotifyID based on title and Artist - End
+
+
+# ============================================================================
+
+
+# Manupulating id column in songList Dataset - Start
+
+assign("songsListDup", songsList)
+songsListDup["id"] <- unlist(fullSongListIDs)
+
+# I found the spotify ID for those songs which we where not able to get from the
+# search (values in songs-not-found.csv), manually through spotify application.
+#
+# Created duplicate file of "songs-not-found.csv" as "songs-not-found-withid.csv"
+# (attached along with the submission) and added a new column called Track.IDs
+#
+# From here moved the not found ids to the song list duplicate dataframe based
+# on the position on the list
+
+# 'songs-not-found-withid.csv' file is duplicate of  
+# songs-not-found.csv generated by the code. The ID part is only one 
+# which is actually manually got from spotify inorder to 
+# proceed further with the code. 
+
+songsNotFoundList <- read.csv("songs-not-found-withid.csv")
+songsNotFoundList <-  na.omit(songsNotFoundList)
+for(i in 1:nrow(songsNotFoundList)) {
+        songsListDup$id[songsNotFoundList$No[i]] <- as.character(paste(songsNotFoundList$Track.ID[i]))
+}
+
+spotifyTrackConstant <- 'spotify:track:'
+songuri <- list()
+songuri[1] <- paste(spotifyTrackConstant, songsNotFoundList$Track.ID[1], sep="")
+for(i in 2:nrow(songsNotFoundList)) {
+        songuri <- paste(songuri, ',', spotifyTrackConstant, songsNotFoundList$Track.ID[i], sep = "")
+}
+
+# Manupulating id column in songList Dataset - End
+
+
+# ============================================================================
+
+
+# forming spotify URL - Start
+
+# songuri has for 305 songs
+# split it before passing to api
+
+spotifyTrackConstant <- 'spotify:track:'
+songuri[1] <- paste(spotifyTrackConstant, songsFound$ID[1], sep="")
+for(i in 2:nrow(songsFound)) {
+       songuri <- paste(songuri, ',', spotifyTrackConstant, songsFound$ID[i], sep = "")
+}
+
+# forming spotify URL - End
+
+
+# ============================================================================
+
+
+# Adding Song to playlist - Start
+
+# I did not use this because I found the api example using curl which 
+# allows to add thee playlist through the developer interface
+# 
+# Just included inorder to so this also I have done !!
+        
+# songuri <- 'spotify:track:4iV5W9uYEdYUVa79Axb7Rh,spotify:track:1301WleyT98MSxVHPZCA6M'
+# addTrackURL <- URLencode(paste('https://api.spotify.com/v1/users/',
+#                      userID,'/playlists/',playlistID,'/tracks?uris=',
+#                      songuri,
+#                      sep=''))
+# responseAddTrack <- POST(addTrackURL, add_headers(Authorization = paste('Bearer', spotifyToken$credentials$access_token, sep = " "),
+#                                      Accept = 'application/json'))
+# info <- fromJSON(toJSON(content(responseAddTrack)))
+
+# Adding Song to playlist - Start
+
+
+# ============================================================================
+
+
+# Getting tracks from playlist - Start
+
+
+flag <- TRUE
+loop <- 0
+i <- 0
+fullTrackIDs <- list()
+track_str <- list()
+audioFeatures <- data.frame()
+while(flag) {
+        i <- i + 1
+        playlistTracksURL <- paste("https://api.spotify.com/v1/users/",
+                                   userID,
+                                   "/playlists/",
+                                   playlistID,
+                                   "/tracks/?offset=",
+                                   loop,
+                                   sep="")
+        getTracks <- GET(url=playlistTracksURL, add_headers(Authorization = HeaderValue))
+        info <- fromJSON(toJSON(content(getTracks)))
+        fullTrackIDs[[i]] <- unlist(info$items$track$id)
+        track_str[[i]] <- fullTrackIDs[[i]][1]
+        for (j in 2:length(fullTrackIDs[[i]])) {
+                track_str[[i]] <- paste(track_str[[i]], fullTrackIDs[[i]][j], sep=",")
+        }
+        trackFeaturesURL <- paste("https://api.spotify.com/v1/audio-features/?ids=",
+                                  track_str[[i]],
+                                  sep="")
+        getSongFeautures <- GET(url=trackFeaturesURL, add_headers(Authorization = HeaderValue))
+        songFeauturesInfo <- fromJSON(toJSON(content(getSongFeautures)))
+        audioFeatures <- rbind.data.frame(audioFeatures, songFeauturesInfo$audio_features)
+        if(length(unlist(info$items$track$id)) != 100) {
+                break;
+        }
+        loop <- loop + 100
+}
+
+# Getting tracks from playlist - End
+
+# ============================================================================
+
+# Merge two Songlist and audio features by id column - Start
+
+songsListDup <- as.data.frame(lapply(songsListDup, unlist))
+df <- merge(songsListDup, audioFeatures, "id", all = TRUE)
+
+str(head(df))
+head(df)
+# Merge two Songlist and audio features by id column - End
+
+```
+
+
+**Missing Data**
+
+Are any of the songs not available in Spotify? If so this is an easy example of what to do with missing data, because the entire row will be deleted from the data set.
+
+```{r}
+df <- na.omit(df) # Missing data
+df <- data.frame(lapply(df, as.character), stringsAsFactors=FALSE)
+str(head(df))
+write.csv(df, file = "df.csv")
+```
+
+Missing data are identified and removed from the dataset using 'na.omit()' and final dataset is transformed to a csv file 'df.csv'. Attached with the assignment submission.
+
+**Feature Types**
+
+Describe which features are categorical? which are numeric?
+
+**Numeric features**
+
+        * Danceability
+        * Energy
+        * Acousticness
+        * Valence
+        * Tempo
+        * Instrumentalness
+        * Speechiness
+        * Loudness
+        * Liveness
+        * Peak 
+        * Duration        
+
+**Categorical feautures**
+
+        * Succesful
+        * Mode
+        * key
+        * Time signature
+
+**Numeric Data**
+
+For each of the numeric features:
+
+- Generate a histogram. Try at least two different values for the number of bins?
+
+```{r}
+df <- read.csv("df.csv")
+histogramWithBins <- function(colValues, main, binsize){
+        hist(as.numeric(colValues), main = main, xlab=paste0(main), breaks = binsize, col = 'red')
+}
+
+par(mfrow=c(1,2))
+
+histogramWithBins(df$danceability, "Danceability", 8)
+histogramWithBins(df$danceability, "Danceability", 16)
+
+histogramWithBins(df$energy, "Energy", 8)
+histogramWithBins(df$energy, "Energy", 16)
+
+histogramWithBins(df$acousticness, "Acousticness", 8)
+histogramWithBins(df$acousticness, "Acousticness", 16)
+
+histogramWithBins(df$valence, "Valence", 8)
+histogramWithBins(df$valence, "Valence", 16)
+
+histogramWithBins(df$tempo, "Tempo", 8)
+histogramWithBins(df$tempo, "Tempo", 16)
+
+histogramWithBins(df$instrumentalness, "Instrumentalness", 8)
+histogramWithBins(df$instrumentalness, "Instrumentalness", 16)
+
+histogramWithBins(df$speechiness, "Speechiness", 8)
+histogramWithBins(df$speechiness, "Speechiness", 16)
+
+histogramWithBins(df$loudness, "Loudness", 8)
+histogramWithBins(df$loudness,"Loudness", 16)
+
+histogramWithBins(df$liveness, "Liveness", 8)
+histogramWithBins(df$liveness, "Liveness", 16)
+
+histogramWithBins(df$Peak, "Peak", 8)
+histogramWithBins(df$Peak, "Peak", 16)
+
+histogramWithBins(df$duration_ms, "Duration", 8)
+histogramWithBins(df$duration_ms, "Duration", 16)
+```
+
+- Generate two histograms in the same figure (stacked side-by-side or one on top of another). In one histogram show the feature values for the successful songs, in the other histogram show the feature values for the unsuccessful songs.
+
+```{r}
+installNewPackage("ggplot2")
+installNewPackage("reshape")
+library("ggplot2", lib.loc="~/R/win-library/3.3")
+library("reshape", lib.loc="~/R/win-library/3.3")
+
+success = as.factor(df$Successful)
+histogramSuccessfulness <- function(colValues, colname, binwidth) {
+        ggplot(melt(as.numeric(colValues)), aes(x=as.numeric(colValues), fill= success)) +
+                geom_histogram(position="stack", binwidth = binwidth) +
+                labs(title = paste("Song Successfulness - ", colname, sep = "")) +
+                xlab(colname)
+}
+
+par(mfrow=c(1,2))
+
+histogramSuccessfulness(df$danceability, "Danceability", .05)
+
+histogramSuccessfulness(df$energy, "Energy", .05)
+
+histogramSuccessfulness(df$acousticness, "Acousticness", .05)
+
+histogramSuccessfulness(df$valence, "Valence", .05)
+
+histogramSuccessfulness(df$tempo, "Tempo", .05)
+
+histogramSuccessfulness(df$instrumentalness, "Instrumentalness", .05)
+
+histogramSuccessfulness(df$speechiness, "Speechiness", .05)
+
+histogramSuccessfulness(df$loudness, "Loudness", .25)
+
+histogramSuccessfulness(df$liveness, "Liveness", .05)
+
+histogramSuccessfulness(df$Peak, "Peak", 1)
+```
+
+
+- Generate a figure with 2 boxplots side-by-side (or stacked on top of another), with the two boxplots corresponding to the songs from the two classes (successfulness).
+
+```{r}
+boxplotSuccessfulness <- function(colValues, ylabel){
+        boxplot(as.numeric(colValues) ~ df$Successful, 
+                main=paste('Boxplot of ', ylabel, sep = ""), col = c(13,14),
+                xlab = 'Successfulness', ylab = ylabel)
+}
+
+par(mfrow=c(1,2))
+
+boxplotSuccessfulness(df$danceability, "Danceability")
+
+boxplotSuccessfulness(df$energy, "Energy")
+
+boxplotSuccessfulness(df$acousticness, "Acousticness")
+
+boxplotSuccessfulness(df$valence, "Valence")
+
+boxplotSuccessfulness(df$tempo, "Tempo")
+
+boxplotSuccessfulness(df$instrumentalness, "Instrumentalness")
+
+boxplotSuccessfulness(df$speechiness, "Speechiness")
+
+boxplotSuccessfulness(df$loudness, "Loudness")
+
+boxplotSuccessfulness(df$liveness, "Liveness")
+
+boxplotSuccessfulness(df$Peak, "Peak")
+```
+
+Then, summarize what if anything the plots have revealed about the data.
+
+**Categorical Data**
+
+For each of the categorical features:
+
+- Generate a bar plot, showing the number of unique values.
+
+```{r}
+barplotUniqueValues <- function(colValues, xlabel){
+        barplot(table(as.character(colValues)), main = paste(xlabel, "Barplot", sep = " "),
+                xlab = xlabel, ylab = "counts", col = "red")
+}
+
+par(mfrow=c(1,2))
+
+barplotUniqueValues(df$Successful, "Successfulness")
+
+barplotUniqueValues(df$mode, "Mode")
+
+barplotUniqueValues(df$key, "Key")
+
+barplotUniqueValues(df$time_signature, "Time signature")
+```
+
+
+- Generate two bar plots in a single figure (stacked or side by side), with the two bar plots corresponding to the songs from the two classes.
+Then, summarize what if anything the plots have revealed about the data.
+
+```{r}
+installNewPackage("ggplot2")
+installNewPackage("reshape")
+library("ggplot2", lib.loc="~/R/win-library/3.3")
+library("reshape", lib.loc="~/R/win-library/3.3")
+
+success = as.factor(df$Successful)
+
+barplotSuccessfulness <- function(colValues, xlabel) {
+        ggplot(melt(as.character(colValues)), aes(x=as.character(colValues), fill = success)) +
+                geom_bar(position = "stack") + xlab(xlabel) +
+                labs(title = paste("Barplot of",  xlabel, "with respect to Successfulness"))
+}
+
+par(mfrow=c(1,2))
+
+barplotSuccessfulness(df$Successful, "Successfulness")
+```
+
+This graph shows the count of successful and unsucessful songs.
+
+```{r}
+barplotSuccessfulness(df$mode, "Mode")
+```
+
+The percentage of sucessfullness is more with major modality songs compared to minor modality songs.
+
+```{r}
+barplotSuccessfulness(df$key, "Key")
+```
+
+This does not reveal much about the data.
+
+```{r}
+barplotSuccessfulness(df$time_signature, "Time signature")
+```
+
+The time signature (meter) is a notational convention to specify how many beats are in each bar (or measure). And in this specified datasets most of the songs have 4 time signature.
+**Pairwise Analysis**
+
+For the numeric variables, explore whether there are any pairwise relationships. Report the results with a figure and a description of what if any relationships are revealed.
+
+```{r}
+pairwise <- function(colValues1, colValues2, label1, label2) {
+        pairs(cbind(as.numeric(colValues1), as.numeric(colValues2)), 
+              labels = c(label1, label2),
+              main = paste(label1, label2, sep = " VS "), pch = 15, col = "red")
+}
+pairwise(df$speechiness, df$acousticness, "Speechiness", "Acousticness")
+```
+
+The pairwise analysis between speechiness and acousticness has strong correlation and they are left skewed reveals that most of the songs falls in the range of 0 to 0.3
+
+```{r}
+pairwise(df$tempo, df$danceability, "Tempo", "Danceability")
+```
+
+The pairwise analysis between Tempo and Danceability has weak correlation and both of them looks like inverse of one another. 
+
+```{r}
+pairwise(df$Peak, df$duration_ms, "Peak", "Duration")
+```
+
+The pairwise analysis between Tempo and Danceability has a similar patterned correlation which can observe that from the plot 
+
+## End of assignment
+

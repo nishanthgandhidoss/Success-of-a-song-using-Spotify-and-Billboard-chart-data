@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="UN5550-f16" />
+  <title>Exploratory Data Analysis Assignment</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="css/flatly.min.css" type="text/css" />
+</head>
+<body>
+    <div class="container">
+    <div class="row">
+            <div class="span12">
+            <h1 id="exploratory-data-analysis-assignment">Exploratory Data Analysis Assignment</h1>
+<h3 id="due-oct.-7-2016">Due: Oct. 7, 2016</h3>
+<p>For this assignment you will be exploring two sets of data. For the first focus on NFL sports data, you will be <strong>completing the assignment alone</strong> (each student by themselves). For the second part, focusing on the Spotify data, you may <strong>work in the groups</strong> (the same groups as the Case Study).</p>
+<h2 id="nfl-data">NFL Data</h2>
+<p>The use of data analysis in sports is becoming increasing more common (and a high profit business). Interest in this analysis grew substantially with the publishing of the book <em>Moneyball</em> (and the subsequent movie). Statistical analysis has spread to many other sports including basketball, football (both American and soccer), tennis, and many others.</p>
+<p>Consider the following three data sets provided:</p>
+<ul>
+<li><code>nfl-passing-2012.csv</code>,</li>
+<li><code>nfl-passing-2013.csv</code>,</li>
+<li><code>nfl-passing-2014.csv</code>, and</li>
+<li><code>nfl-passing-2015.csv</code></li>
+</ul>
+<p>The four data sets consist of passing statistics of NFL quarterbacks for the last four seasons. The data was sourced from: <a href="http://www.pro-football-reference.com/years/2015/passing.htm" class="uri">http://www.pro-football-reference.com/years/2015/passing.htm</a></p>
+<h3 id="q1.-2015-data">Q1. 2015 Data</h3>
+<p>First, examine a single data source from the 2015 season.</p>
+<p>The following data analysis should be run on only a selection of players that have made at least 100 attempts and 1000 yards.</p>
+<p>Report the following information as values, tables, and/or figures.</p>
+<ol style="list-style-type: decimal">
+<li>Calculate the <em>mean</em>, <em>median</em>, and <em>mode</em> of touchdowns and interceptions.</li>
+<li>Calculate the first and third quartiles, <span class="math inline"><em>Q</em><sub>1</sub></span> and <span class="math inline"><em>Q</em><sub>3</sub></span> of <code>Yds</code> and <code>Rate</code></li>
+<li>Present the <em>five-number summary</em> of <code>Cmp\%</code> and <code>Yds</code> as a table</li>
+<li>Create a histogram of yards with 8, 16, and 24 bins.</li>
+<li>Compare the distrubtion of yards based on whether they threw less than 12 interceptions.</li>
+<li>Create a scatterplot of touchdowns vs. interceptions.</li>
+</ol>
+<h3 id="q2.-2014-data">Q2. 2014 Data</h3>
+<p>Repeat the analysis above with the data from the 2014 season.</p>
+<h3 id="q3.-all-seasons">Q3. All Seasons</h3>
+<p>For this part of the assignment, you should look at variables across all four seasons. The merge should match players across seasons (using a key of player names). Ensure that the variables that may be named the same in the four data files all appear in the final data for analysis.</p>
+<p>Select a set of players that has played in at least 5 games in each season and has made at least 100 attempts in each season.</p>
+<p>Report the following information as values, tables, and/or figures.</p>
+<ol style="list-style-type: decimal">
+<li>Calculate the <em>mean</em>, <em>median</em>, and <em>mode</em> of average touchdowns across the four seasons.</li>
+<li>Create a scatterplot of average touchdowns vs. average completion percentage.</li>
+<li>Repeat the scatterplot of touchdowns vs. completion percentage using color to indicate which season.</li>
+<li>Draw a histogram of yards using color to indicate which season.</li>
+<li>Select the 3 quarterbacks with the highest average quarterback rating. Plot the number of touchdowns and completion percentage vs. the season (as the x-axis values).</li>
+<li>Show four tables with the top 5 QBs each season selected by ESPN's quarterback rating and the following variables: yards, touchdowns, interceptions, completion percentage.</li>
+</ol>
+<h2 id="spotify-data">Spotify Data</h2>
+<p>For this question, you will want to use the data from Case Study 1.</p>
+<p>To start you will show your understanding and exploration of the data and its features.</p>
+<p>For every song on the you will have the following features:</p>
+<ul>
+<li>song title (track)</li>
+<li>artist</li>
+<li>peak (highest spot on the charts)</li>
+<li>date entered (when the song first appeared on the charts)</li>
+<li>successful (criteria to be predicted)</li>
+</ul>
+<p>In addition, you will collect the audio features from Spotify:</p>
+<ul>
+<li>danceability</li>
+<li>energy</li>
+<li>key</li>
+<li>loudness</li>
+<li>mode</li>
+<li>speechiness</li>
+<li>acousticness</li>
+<li>instrumentalness</li>
+<li>liveness</li>
+<li>valence</li>
+<li>tempo</li>
+<li>duration_ms</li>
+<li>time_signature</li>
+</ul>
+<h3 id="q4.-features">Q4. Features</h3>
+<p>For each audio feature, make sure you understand what the features are, what are the possible values, etc. Read the <a href="https://developer.spotify.com">Spotify API</a> describing the audio features.</p>
+<h4 id="missing-data">Missing Data</h4>
+<p>Are any of the songs not available in Spotify? If so this is an easy example of what to do with missing data, because the entire row will be deleted from the data set.</p>
+<h4 id="feature-types">Feature Types</h4>
+<p>Describe which features are categorical? which are numeric?</p>
+<h4 id="numeric-data">Numeric Data</h4>
+<p>For each of the numeric features:</p>
+<ul>
+<li>Generate a histogram. Try at least two different values for the number of bins?<br />
+</li>
+<li>Generate two histograms in the same figure (stacked side-by-side or one on top of another). In one histogram show the feature values for the <strong>successful</strong> songs, in the other histogram show the feature values for the <strong>unsuccessful</strong> songs.</li>
+<li>Generate a figure with 2 boxplots side-by-side (or stacked on top of another), with the two boxplots corresponding to the songs from the two classes (<em>successfulness</em>).</li>
+</ul>
+<p>Then, summarize what if anything the plots have revealed about the data.</p>
+<h4 id="categorical-data">Categorical Data</h4>
+<p>For each of the categorical features:</p>
+<ul>
+<li>Generate a bar plot, showing the number of unique values.</li>
+<li>Generate two bar plots in a single figure (stacked or side by side), with the two bar plots corresponding to the songs from the two classes.</li>
+</ul>
+<p>Then, summarize what if anything the plots have revealed about the data.</p>
+<h4 id="pairwise-analysis">Pairwise Analysis</h4>
+<p>For the numeric variables, explore whether there are any pairwise relationships. Report the results with a figure and a description of what if any relationships are revealed.</p>
+<h2 id="deliverables">Deliverables</h2>
+<p>Your answers must be computer generated (including text and images). Your final submission should include text responses, images as requested and tables, please submit this as two documents: (1) a PDF document or standalone HTML file and (2) the source code.</p>
+<p>I highly recommend following the ideas of reproducible research and embed the code, images, and results directly into the text using packages like <code>knitr/rmarkdown</code>, <code>Sweave</code>, <code>publish</code>.</p>
+<p><strong>Use of other sources beyond talking to the faculty should include an acknowledgment in your work, as a citation, footnote, or comment in the code.</strong></p>
+            </div>
+    </div>
+  </div>
+  <hr>
+<footer>
+UN5550 - Fall 2016 <br>
+updated:   Sept. 21, 2016
+</footer>
+</body>
+
+</html>

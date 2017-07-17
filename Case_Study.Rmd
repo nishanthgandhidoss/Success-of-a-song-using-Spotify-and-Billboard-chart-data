@@ -1,0 +1,100 @@
+---
+title: "Case Study - Spotify"
+author: "Nishanth Gandhidoss"
+date: "October 20, 2016"
+output: html_document
+---
+
+##Importing the data set
+
+```{r}
+df <- read.csv("df.csv")
+```
+
+**Removing the noise caused by peak, because when we found the relation between peak and succesfulness of the songs, most of the succesful songs fall under the range of 1 to 10 of peak values and there is only one song which is false in the data. For more convenencie we removed the observation**
+
+```{r}
+df1 <- df[!df$X == df[df$Successful == 0 & df$Peak < 10, ]$X, ]
+```
+
+##Separating the train data and test data for analysis
+
+```{r}
+train_data <- df1[1:300, ]
+test_data <- df1[301:nrow(df1), ]
+```
+
+
+##Finding the correlation between the varibles
+
+```{r}
+cor(train_data$Successful, train_data$Peak)
+cor(train_data$Successful, train_data$danceability)
+cor(train_data$Successful, train_data$energy)
+cor(train_data$Successful, train_data$key)
+cor(train_data$Successful, train_data$loudness)
+cor(train_data$Successful, train_data$mode)
+cor(train_data$Successful, train_data$speechiness)
+cor(train_data$Successful, train_data$acousticness)
+cor(train_data$Successful, train_data$instrumentalness)
+cor(train_data$Successful, train_data$liveness)
+cor(train_data$Successful, train_data$valence)
+cor(train_data$Successful, train_data$tempo)
+cor(train_data$Successful, train_data$duration_ms)
+cor(train_data$Successful, train_data$time_signature)
+```
+
+**The correlation coefficient (a value between -1 and +1) tells you how strongly two variables are related to each other.**
+
+##Removing non impact varibles
+
+```{r}
+non_impact_cols <- c(1:6, 9, 12, 18:23)
+train_data <- train_data[, -non_impact_cols]
+test_data <- test_data[, -non_impact_cols]
+```
+
+##Scaling the varibles
+
+```{r}
+scale_data <- function(data) {
+    data.frame(lapply(data, function(data) 
+                            scale(data, center = FALSE, 
+                                  scale = max(data, na.rm = TRUE)/1)))
+}
+train_data <- scale_data(train_data)
+test_data <- scale_data(test_data)
+```
+
+##Building the model
+
+```{r}
+model <- glm(Successful ~., family = binomial(link = 'logit'), data = train_data)
+summary(model)
+```
+
+**We see the deviance residuals, which are a measure of model fit. This part of output shows the distribution of the deviance residuals for individual cases used in the model.**
+
+**For a one unit increase in loudness, the log odds of sucessceful decrease by 0.20.**
+
+```{r}
+confint(model)
+```
+
+##Checking the fit
+
+```{r}
+fit <- predict(model, newdata=test_data, type='response')
+fit <- ifelse(fit > 0.5,1,0)
+fit
+```
+
+##Calculating the accuracy
+
+```{r}
+accuracy <- mean(fit != test_data$Successful)
+print(paste('Accuracy',1-accuracy))
+```
+
+**And thus, we have an accuracy of 61.34%**
+
